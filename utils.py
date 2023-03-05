@@ -24,19 +24,29 @@ def get_next_g_train():
     feed = gtfs_realtime_pb2.FeedMessage()
     feed.ParseFromString(response.content)
 
-    print("------Queens------")
+    arrivals = {"Queens": [], "Church": []}
+
+    # ------Queens------
     for entity in feed.entity:
         for update in entity.trip_update.stop_time_update:
+            # north-bound ID for the stop
             if update.stop_id == "G26N":
                 utc_time = datetime.fromtimestamp(update.arrival.time)
-                ny_time = utc_time.astimezone(timezone("US/Eastern"))
+                ny_time = utc_time.astimezone(timezone("US/Eastern")).strftime("%H:%M")
                 time_til = int((utc_time - datetime.utcnow()).total_seconds() / 60)
-                print(f"arrival: {ny_time} (in {time_til} minutes)")
-    print("------Church------")
+                arrivals["Queens"].append(time_til)
+    # ------Church------
     for entity in feed.entity:
         for update in entity.trip_update.stop_time_update:
+            # south-bound ID for the stop
             if update.stop_id == "G26S":
                 utc_time = datetime.fromtimestamp(update.arrival.time)
-                ny_time = utc_time.astimezone(timezone("US/Eastern"))
+                ny_time = utc_time.astimezone(timezone("US/Eastern")).strftime("%H:%M")
                 time_til = int((utc_time - datetime.utcnow()).total_seconds() / 60)
-                print(f"arrival: {ny_time} (in {time_til} minutes)")
+                arrivals["Church"].append(time_til)
+
+    # sort the arrivals by time
+    for direction in arrivals:
+        arrivals[direction].sort()
+
+    print(str(arrivals) + "                 ", end="\r")
