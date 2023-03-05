@@ -1,6 +1,6 @@
 """print the next g train"""
-from utils import get_next_g_train
 import time
+from utils import get_next_g_train
 
 if __name__ == "__main__":
     while True:
