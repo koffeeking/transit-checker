@@ -1,0 +1,8 @@
+{
+    "name": "Anaconda",
+    "dockerFile": "Dockerfile",
+    "extensions": [
+        "ms-python.python"
+    ],
+    "postCreateCommand": "conda init bash"
+}
